@@ -7,9 +7,7 @@
 #include "lauxlib.h"
 #include "lualib.h"
 
-static int
-cchroot(lua_State *L)
-{
+static int cchroot(lua_State *L) {
     const char *path = luaL_checkstring(L, 1);
     if (chroot(path) == -1) {
         lua_pushnil(L);
@@ -20,9 +18,7 @@ cchroot(lua_State *L)
     return 1;
 }
 
-static int
-cchdir(lua_State *L)
-{
+static int cchdir(lua_State *L) {
     const char *path = luaL_checkstring(L, 1);
     if (chdir(path) == -1) {
         lua_pushnil(L);
@@ -33,17 +29,13 @@ cchdir(lua_State *L)
     return 1;
 }
 
-static const
-luaL_Reg syslib[] =
-{
+static const luaL_Reg syslib[] = {
     {"chroot", cchroot},
     {"chdir", cchdir},
     {NULL, NULL}
 };
 
-LUALIB_API int
-luaopen_cimicida(lua_State *L)
-{
+LUALIB_API int luaopen_cimicida(lua_State *L) {
     luaL_newlib(L, syslib);
     return 1;
 }
