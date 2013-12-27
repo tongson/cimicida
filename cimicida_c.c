@@ -35,7 +35,7 @@ static const luaL_Reg syslib[] = {
     {NULL, NULL}
 };
 
-LUALIB_API int luaopen_cimicida(lua_State *L) {
+LUALIB_API int luaopen_cimicida_c(lua_State *L) {
     luaL_newlib(L, syslib);
     return 1;
 }

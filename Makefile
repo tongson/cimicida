@@ -7,7 +7,7 @@ WARN= -pedantic -Wall -Wextra
 INCS= -I$(LUAINC)
 MAKESO= $(CC) -shared
 
-MYNAME= cimicida
+MYNAME= cimicida_c
 MYLIB= $(MYNAME)
 T= $(MYNAME).so
 OBJS= $(MYLIB).o
