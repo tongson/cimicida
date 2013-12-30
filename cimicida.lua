@@ -55,6 +55,18 @@ function C.system (str)
 	return true, {0}
 end
 
+--- Use os.execute (system(3)) to run a script
+-- similar to C.system above but without using exec
+-- or setting options.
+-- This is effectively running 'sh -c script'
+-- @param str is the script
+-- @return error code and boolean
+function C.script (str)
+	local _, _, code = execute(str)
+	if not (code == 0) then return false, {code} end
+	return true, {0}
+end
+
 return C
 
 
