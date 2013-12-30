@@ -17,11 +17,18 @@ _ENV=nil
 -- to a table entry. If no output then
 -- use the error code as the first and only
 -- table entry.
+-- The exec emulates the fork, fork, exec dance so
+-- the executable replaces the shell.
 -- @param str is the command or executable to run
 -- @return a table of lines from the output and a boolean
 function C.execsh (str)
+	local cmd = {}
+	cmd[1] = [[set -efu
+	exec ]]
+	cmd[2] = str
+	cmd[3] = [[ 0>&- 2>&-]]
 	local tbl = {}
-	local strm = popen(str, 'r')
+	local strm = popen(concat(cmd), 'r')
 	strm:flush()
 	for ln in strm:lines() do
 		tbl[#tbl + 1] = ln
@@ -34,15 +41,15 @@ end
 
 --- Use os.execute (system(3)) to run a script or command
 -- This is preferrable over execsh if you don't need the output
+-- This also emulates fork*2+exec.
 -- @param str is a string of script or command
 -- @return error code and boolean
 function C.system (str)
 	local cmd = {}
-	cmd[1] = [[
-	set -efu
-	exec 0>&- 2>&- >/dev/null
-	]]
+	cmd[1] = [[set -efu
+	exec ]]
 	cmd[2] = str
+	cmd[3] = [[ 0>&- 2>&- >/dev/null]]
 	local _, _, code = execute(concat(cmd))
 	if not (code == 0) then return false, {code} end
 	return true, {0}
