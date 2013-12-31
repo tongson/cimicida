@@ -12,7 +12,7 @@ local ipairs, print =
 
 _ENV=nil
 
---- Use io.popen (popen(3)) to run a command
+--- Use io.popen (popen(3)) to run a command.
 -- then convert each line from the output
 -- to a table entry. If no output then
 -- use the error code as the first and only
@@ -38,8 +38,7 @@ function C.execsh (str)
 	return true, tbl
 end
 
-
---- Use os.execute (system(3)) to run a script or command
+--- Use os.execute (system(3)) to run a script or command.
 -- This is preferrable over execsh if you don't need the output
 -- This also emulates fork*2+exec.
 -- @param str is a string of script or command
@@ -55,7 +54,7 @@ function C.system (str)
 	return true, {0}
 end
 
---- Use os.execute (system(3)) to run a script
+--- Use os.execute (system(3)) to run a script.
 -- similar to C.system above but without using exec
 -- or setting options.
 -- This is effectively running 'sh -c script'
