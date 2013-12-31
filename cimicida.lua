@@ -42,7 +42,7 @@ end
 -- This is preferrable over execsh if you don't need the output
 -- This also emulates fork*2+exec.
 -- @param str is a string of script or command
--- @return error code and boolean
+-- @return boolean and error code
 function C.system (str)
 	local cmd = {}
 	cmd[1] = [[set -efu
@@ -50,8 +50,8 @@ function C.system (str)
 	cmd[2] = str
 	cmd[3] = [[ 0>&- 2>&- >/dev/null]]
 	local _, _, code = execute(concat(cmd))
-	if not (code == 0) then return false, {code} end
-	return true, {0}
+	if not (code == 0) then return false, code end
+	return true, 0
 end
 
 --- Use os.execute (system(3)) to run a script.
