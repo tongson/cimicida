@@ -42,7 +42,8 @@ end
 -- This is preferrable over execsh if you don't need the output
 -- This also emulates fork*2+exec.
 -- @param str is a string of script or command
--- @return boolean and error code
+-- @return true if command executed successfully,
+-- false otherwise. After this the exit code.
 function C.system (str)
 	local cmd = {}
 	cmd[1] = [[set -efu
@@ -59,7 +60,8 @@ end
 -- or setting options.
 -- This is effectively running 'sh -c script'
 -- @param str is the script
--- @return error code and boolean
+-- @return true if command executed successfully,
+-- false otherwise. After this the exit code.
 function C.script (str)
 	local _, _, code = execute(str)
 	if not (code == 0) then return false, code end
