@@ -47,13 +47,13 @@ end
 -- @return true if command executed successfully,
 -- false otherwise. After this the exit code.
 function C.system (str)
-	local cmd = {}
-	cmd[1] = [[set -efu
+	local set = [[set -efu
 	exec ]]
-	cmd[2] = str
-	cmd[3] = [[ 0>&- 2>&- >/dev/null]]
-	local _, _, code = execute(concat(cmd))
-	if not (code == 0) then return false, code end
+	local redir = [[ 0>&- 2>&- >/dev/null]]
+	local _, _, code = execute(set..str..redir)
+	if code ~= 0 then
+		return false, code
+	end
 	return true, 0
 end
 
@@ -66,7 +66,9 @@ end
 -- false otherwise. After this the exit code.
 function C.script (str)
 	local _, _, code = execute(str)
-	if not (code == 0) then return false, code end
+	if code ~= 0 then
+		return false, code
+	end
 	return true, 0
 end
 
