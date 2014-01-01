@@ -7,6 +7,8 @@
 #include "lauxlib.h"
 #include "lualib.h"
 
+#include "flopen.h"
+
 static int cchroot(lua_State *L) {
     const char *path = luaL_checkstring(L, 1);
     if (chroot(path) == -1) {
