@@ -7,6 +7,8 @@ local close, lines, open, popen =
 local concat, execute =
       table.concat, os.execute
 
+local gsub = string.gsub
+
 local ipairs, print =
       ipairs, print
 
@@ -68,6 +70,17 @@ function C.script (str)
 	return true, 0
 end
 
+--- Primitive templating with `string.gsub`.
+-- Variables are marked as `{{ var }}`, where `var`
+-- is a key from a table. Variables and keys can only
+-- contain alphanumeric characters and underscores.
+-- These variables will be replaced with the corresponding
+-- value of the variable (key).
+-- @param str is the string (template)
+-- @param tbl is the table
+-- @return processed string
+function C.templit (str, tbl)
+	return (str:gsub([[{{ ([%w_]+) }}]], tbl))
+end
+
 return C
-
-
