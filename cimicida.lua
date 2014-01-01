@@ -4,8 +4,8 @@ local c = C
 local close, lines, open, popen =
       io.close, io.lines, io.open, io.popen
 
-local concat, execute =
-      table.concat, os.execute
+local execute =
+      os.execute
 
 local gsub = string.gsub
 
@@ -24,20 +24,20 @@ _ENV=nil
 -- @param str is the command or executable to run
 -- @return a table of lines from the output and a boolean
 function C.execsh (str)
-	local cmd = {}
-	cmd[1] = [[set -efu
+	local set = [[set -efu
 	exec ]]
-	cmd[2] = str
-	cmd[3] = [[ 0>&- 2>&-]]
-	local tbl = {}
-	local strm = popen(concat(cmd), 'r')
-	strm:flush()
-	for ln in strm:lines() do
-		tbl[#tbl + 1] = ln
+	local redir = [[ 0>&- 2>&-]]
+	local t = {}
+	local s = popen(set..str..redir, 'r')
+	s:flush()
+	for l in s:lines() do
+		t[#t+1] = l
 	end
-	local _, _, code = strm:close()
-	if not (code == 0) then return false, {code} end
-	return true, tbl
+	local _, _, code = s:close()
+	if code ~= 0 then
+		return false, {code}
+	end
+	return true, t
 end
 
 --- Use os.execute (system(3)) to run a script or command.
