@@ -48,8 +48,9 @@ end
 -- false otherwise. After this the exit code.
 function C.system (str)
 	local set = [[set -efu
+   exec 0>&- 2>&- 1>/dev/null
 	exec ]]
-	local redir = [[ 0>&- 2>&- >/dev/null]]
+	local redir = [[ 0>&- 2>&- 1>/dev/null]]
 	local _, _, code = execute(set..str..redir)
 	if code ~= 0 then
 		return false, code
