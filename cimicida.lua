@@ -14,6 +14,17 @@ local ipairs, print =
 
 _ENV=nil
 
+--- Use pairs to traverse a table and check for a value.
+-- @param tbl is the tbl to traverse
+-- @param value is the value to look for
+-- @return a boolean as the result of the search
+function c.hasv (tbl, value)
+   for _, v in pairs(tbl) do
+      if v == value then return true end
+   end
+   return false
+end
+
 --- Use io.popen (popen(3)) to run a command.
 -- then convert each line from the output
 -- to a table entry. If no output then
