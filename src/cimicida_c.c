@@ -17,9 +17,10 @@ typedef luaL_Stream LStream;
 static int Cchroot (lua_State *L) {
     const char *path = luaL_checkstring(L, 1);
     if (chroot(path) == -1) {
-        lua_pushnil(L);
-        luaL_error(L, "Unable to chroot to " LUA_QS " (%s)",
+        lua_pushboolean(L, 0);
+        lua_pushfstring(L, "Unable to chroot to " LUA_QS " (%s)",
                                 path, strerror(errno));
+        return 2;
     }
     lua_pushboolean(L, 1);
     return 1;
@@ -29,9 +30,10 @@ static int Cflclose (lua_State *L) {
     FILE *f = *(FILE**)luaL_checkudata(L, 1, LUA_FILEHANDLE);
     int res = close(fileno(f));
     if (res == -1) {
-        lua_pushnil(L);
-        luaL_error(L, "Unable to close " LUA_QS " (%s)",
+        lua_pushboolean(L, 0);
+        lua_pushfstring(L, "Unable to close " LUA_QS " (%s)",
                                 f, strerror(errno));
+        return 2;
     }
     lua_pushboolean(L, 1);
     return 1;
@@ -50,9 +52,10 @@ static int Cflopen (lua_State *L) {
 
     int fd = flopen(path, flags, mode);
     if (fd == -1) {
-        lua_pushnil(L);
-        luaL_error(L, "Unable to lock " LUA_QS " (%s)",
+        lua_pushboolean(L, 0);
+        lua_pushfstring(L, "Unable to lock " LUA_QS " (%s)",
                                 path, strerror(errno));
+        return 2;
     }
     p->f = fdopen(fd, "rw");
     return 1;
@@ -61,9 +64,10 @@ static int Cflopen (lua_State *L) {
 static int Cchdir (lua_State *L) {
     const char *path = luaL_checkstring(L, 1);
     if (chdir(path) == -1) {
-        lua_pushnil(L);
-        luaL_error(L, "Unable to change directory to " LUA_QS " (%s)",
+        lua_pushboolean(L, 0);
+        lua_pushfstring(L, "Unable to change directory to " LUA_QS " (%s)",
                                 path, strerror(errno));
+        return 2;
     }
     lua_pushboolean(L, 1);
     return 1;
