@@ -14,8 +14,7 @@
 
 typedef luaL_Stream LStream;
 
-static int
-Cchroot(lua_State *L)
+static int Cchroot(lua_State *L)
 {
 	const char *path = luaL_checkstring(L, 1);
 	if (chroot(path) == -1) {
@@ -28,8 +27,7 @@ Cchroot(lua_State *L)
 	return 1;
 }
 
-static int
-Cflclose(lua_State *L)
+static int Cflclose(lua_State *L)
 {
 	FILE *f = *(FILE**)luaL_checkudata(L, 1, LUA_FILEHANDLE);
 	int res = close(fileno(f));
@@ -43,8 +41,7 @@ Cflclose(lua_State *L)
 	return 1;
 }
 
-static int
-Cflopen(lua_State *L)
+static int Cflopen(lua_State *L)
 {
 	const char *path = luaL_checkstring(L, 1);
 	int flags = luaL_optint(L, 2, O_NONBLOCK | O_RDWR);
@@ -67,8 +64,7 @@ Cflopen(lua_State *L)
 	return 1;
 }
 
-static int
-Cchdir(lua_State *L)
+static int Cchdir(lua_State *L)
 {
 	const char *path = luaL_checkstring(L, 1);
 	if (chdir(path) == -1) {
@@ -81,8 +77,7 @@ Cchdir(lua_State *L)
 	return 1;
 }
 
-static const
-luaL_Reg syslib[] =
+static const luaL_Reg syslib[] =
 {
 	{"chroot", Cchroot},
 	{"flclose", Cflclose},
@@ -91,8 +86,7 @@ luaL_Reg syslib[] =
 	{NULL, NULL}
 };
 
-LUALIB_API int
-luaopen_cimicida_c(lua_State *L)
+LUALIB_API int luaopen_cimicida_c(lua_State *L)
 {
 	luaL_newlib(L, syslib);
 	return 1;
