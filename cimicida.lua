@@ -24,22 +24,20 @@ local outf = function (fd, str, ...)
   return ret, err
 end
 
--- Append a line break and string to an input string.
--- @param str Input string (STRING)
--- @param a String to append to str (STRING)
--- @return new string (STRING)
-local appendln = function (str, a)
-  return string.format("%s\n%s", str, a)
+--- Output formatted string to STDERR.
+-- @param str C-like string (STRING)
+-- @param ... Variable number of arguments to interpolate str (VARGS)
+local warningf = function (str, ...)
+  outf(io.stderr, str, ...)
 end
 
 --- Output formatted string to STDERR and return 1 as the exit status.
 -- @param str C-like string (STRING)
 -- @param ... Variable number of arguments to interpolate str (VARGS)
 local errorf = function (str, ...)
-  outf(io.stderr, str, ...)
+  warningf(str, ...)
   os.exit(1)
 end
-
 
 --- Call cimicida.errorf if the first argument is false (i.e. nil or false).
 -- @param v value to evaluate (VALUE)
@@ -53,11 +51,12 @@ local assertf = function (v, str, ...)
   end
 end
 
---- Output formatted string to STDERR.
--- @param str C-like string (STRING)
--- @param ... Variable number of arguments to interpolate str (VARGS)
-local warningf = function (str, ...)
-  outf(io.stderr, str, ...)
+-- Append a line break and string to an input string.
+-- @param str Input string (STRING)
+-- @param a String to append to str (STRING)
+-- @return new string (STRING)
+local appendln = function (str, a)
+  return string.format("%s\n%s", str, a)
 end
 
 --- Time in the strftime(3) format %H:%M.
