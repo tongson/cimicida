@@ -9,14 +9,13 @@ local core = {
   pairs        = pairs,
   ipairs       = ipairs
 }
-local cimicida = {}
 local ENV = {}
 _ENV = ENV
 
 --- Output formatted string to the current output.
 -- @param str C-like string (STRING)
 -- @param ... Variable number of arguments to interpolate str (VARARGS)
-function cimicida.printf (str, ...)
+local printf = function (str, ...)
   io.write(string.format(str, ...))
 end
 
@@ -24,10 +23,10 @@ end
 -- @param fd stream/descriptor
 -- @param str C-like string (STRING)
 -- @param ... Variable number of arguments to interpolate str (VARARGS)
-function cimicida.outf (fd, str, ...)
+local outf = function (fd, str, ...)
   local o = io.output()
   io.output(fd)
-  local ret, err = io.write(string.format(str, ...))
+  local ret, err = printf(str, ...)
   io.output(o)
   return ret, err
 end
@@ -36,15 +35,15 @@ end
 -- @param str Input string (STRING)
 -- @param a String to append to str (STRING)
 -- @return new string (STRING)
-function cimicida.appendln (str, a)
+local appendln = function (str, a)
   return string.format("%s\n%s", str, a)
 end
 
 --- Output formatted string to STDERR and return 1 as the exit status.
 -- @param str C-like string (STRING)
 -- @param ... Variable number of arguments to interpolate str (VARGS)
-function cimicida.errorf (str, ...)
-  cimicida.outf(io.stderr, str, ...)
+local errorf = function (str, ...)
+  outf(io.stderr, str, ...)
   core.exit(1)
 end
 
@@ -53,37 +52,37 @@ end
 -- @param v value to evaluate (VALUE)
 -- @param str C-like string (STRING)
 -- @param ... Variable number of arguments to interpolate str (VARGS)
-function cimicida.perror (v, str, ...)
+local perror = function (v, str, ...)
   if v then
     return true
   else
-    cimicida.errorf(str, ...)
+    errorf(str, ...)
   end
 end
 
 --- Output formatted string to STDERR.
 -- @param str C-like string (STRING)
 -- @param ... Variable number of arguments to interpolate str (VARGS)
-function cimicida.warningf (str, ...)
-  cimicida.outf(io.stderr, str, ...)
+local warningf = function (str, ...)
+  outf(io.stderr, str, ...)
 end
 
 --- Time in the strftime(3) format %H:%M.
 -- @return the time as a string (STRING)
-function cimicida.timehm ()
+local timehm = function ()
   return os.date("%H:%M")
 end
 
 
 --- Date in the strftime(3) format %Y-%m-%d.
 -- @return the date as a string (STRING)
-function cimicida.dateymd ()
+local dateymd = function ()
   return os.date("%Y-%m-%d")
 end
 
 --- Timestamp in the strftime(3) format %Y-%m-%d %H:%M:%S %Z%z.
 -- @return the timestamp as a string (STRING)
-function cimicida.timestamp ()
+local timestamp = function ()
   return os.date("%Y-%m-%d %H:%M:%S %Z%z")
 end
 
@@ -91,7 +90,7 @@ end
 -- @param tbl table to search (TABLE)
 -- @param value value to look for in tbl (VALUE)
 -- @return a boolean value, true if v is found, nil otherwise (BOOLEAN)
-function cimicida.hasv (tbl, value)
+local hasv = function (tbl, value)
   for _, tval in core.pairs(tbl) do
     tval = string.gsub(tval, '[%c]', '')
     if tval == value then return true end
@@ -103,7 +102,7 @@ end
 -- @param tbl table to convert (TABLE)
 -- @param def default value for each field in the record (VALUE)
 -- @return the converted table (TABLE)
-function cimicida.arr_to_rec (tbl, def)
+local arr_to_rec = function (tbl, def)
   local t = {}
   for n = 1, #tbl do t[tbl[n]] = def end
   return t
@@ -113,7 +112,7 @@ end
 -- Each line is a table value
 -- @param str string to convert (STRING)
 -- @return the table (TABLE)
-function cimicida.ln_to_tbl (str)
+local ln_to_tbl = function (str)
   local tbl = {}
   if not str then
     return tbl
@@ -127,7 +126,7 @@ end
 --- Split alphanumeric matches of a string into table values.
 -- @param str string to convert (STRING)
 -- @return the table (TABLE)
-function cimicida.word_to_tbl (str)
+local word_to_tbl = function (str)
   local t = {}
   for s in string.gmatch(str, "%w+") do
     t[#t + 1] = s
@@ -138,7 +137,7 @@ end
 --- Split non-space character matches of a string into table values.
 -- @param str string to convert (STRING)
 -- @return the table (TABLE)
-function cimicida.str_to_tbl (str)
+local str_to_tbl = function (str)
   local t = {}
   for s in string.gmatch(str, "%S+") do
     t[#t + 1] = s
@@ -150,7 +149,7 @@ end
 -- From lua-nucleo.
 -- @param str string to escape (STRING)
 -- @return a new string (STRING)
-function cimicida.escape_pattern (str)
+local escape_pattern = function (str)
   local matches =
   {
     ["^"] = "%^",
@@ -176,7 +175,7 @@ end
 -- @param patt pattern to filter (STRING)
 -- @param plain set to true if doing plain matching (BOOLEAN)
 -- @return modified table (TABLE)
-function cimicida.filtertval (tbl, patt, plain)
+local filtertval = function (tbl, patt, plain)
   plain = plain or nil
   local s, c = #tbl, 0
   for n = 1, s do
@@ -200,7 +199,7 @@ end
 -- Each line is a table value
 -- @param file file to convert (STRING)
 -- @return a table (TABLE)
-function cimicida.file_to_tbl (file)
+local file_to_tbl = function (file)
   local _, fd = core.pcall(io.open, file, "re")
   if fd then
     io.flush(fd)
@@ -219,7 +218,7 @@ end
 -- @param str string to find (STRING)
 -- @param patt boolean setting for plain strings (BOOLEAN)
 -- @return the matching index if string is found, nil otherwise (NUMBER)
-function cimicida.tfind (tbl, str, patt)
+local tfind = function (tbl, str, patt)
   patt = patt or nil
   local ok, found
   for n = 1, #tbl do
@@ -234,7 +233,7 @@ end
 -- An nul table is created in the copy when table is encountered
 -- @param tbl table to be copied (TABLE)
 -- @return the copy as a table (TABLE)
-function cimicida.shallowcp (tbl)
+local shallowcp = function (tbl)
   local copy
   copy = {}
   for f, v in core.pairs(tbl) do
@@ -251,7 +250,7 @@ end
 -- @param path path to split (STRING)
 -- @return location (STRING)
 -- @return file/directory (STRING)
-function cimicida.splitp (path)
+local splitp = function (path)
   local l = string.len(path)
   local c = string.sub(path, l, l)
   while l > 0 and c ~= "/" do
@@ -269,7 +268,7 @@ end
 --- Check if a path is a file or not.
 -- @param file path to the file (STRING)
 -- @return true if path is a file, nil otherwise (BOOLEAN)
-function cimicida.isfile (file)
+local isfile = function (file)
   local fd = io.open(file, "rb")
   if fd then
     io.close(fd)
@@ -280,7 +279,7 @@ end
 --- Read a file/path.
 -- @param file path to the file (STRING)
 -- @return the contents of the file, nil if the file cannot be read or opened (STRING or NIL)
-function cimicida.fopen (file)
+local fopen = function (file)
   local str
   for s in io.lines(file, 2^12) do
     str = string.format("%s%s", str or "", s)
@@ -295,7 +294,7 @@ end
 -- @param str string to write (STRING)
 -- @param mode io.open mode (STRING)
 -- @return true if the write succeeded, nil and the error message otherwise (BOOLEAN)
-function cimicida.fwrite (path, str, mode)
+local fwrite = function (path, str, mode)
   local setvbuf, write = io.setvbuf, io.write
   mode = mode or "we+"
   local fd = io.open(path, mode)
@@ -316,8 +315,8 @@ end
 -- @param ln line number (NUMBER)
 -- @param file (STRING)
 -- @return the line (STRING)
-function cimicida.getln (ln, file)
-  local str = cimicida.fopen(file)
+local getln = function (ln, file)
+  local str = fopen(file)
   local i = 0
   for line in string.gmatch(str, "([^\n]*)\n") do
     i = i + 1
@@ -334,7 +333,7 @@ end
 -- @param str string to interpolate (STRING)
 -- @param tbl table (record) to deduce values from (TABLE)
 -- @return processed string (STRING)
-function cimicida.sub (str, tbl)
+local sub = function (str, tbl)
   local t, _ = {}, nil
   _, str = core.pcall(string.gsub, str, "{{[%s]-([%g]+)[%s]-}}",
     function (s)
@@ -363,7 +362,7 @@ end
 -- @param status exit status (STRING)
 -- @param code exit code (NUMBER)
 -- @return a formatted string (STRING)
-function cimicida.exitstr (proc, status, code)
+local exitstr = function (proc, status, code)
   if status == "exit" or status == "exited" then
     return string.format("%s: Exited with code %s", proc, code)
   end
@@ -375,7 +374,7 @@ end
 --- Check if "yes" or a "true" was passed.
 -- @param s string (STRING)
 -- @return the boolean true if the string matches, nil otherwise (BOOLEAN)
-function cimicida.truthy (s)
+local truthy = function (s)
   if s == "yes" or
      s == "YES" or
      s == "true" or
@@ -388,7 +387,7 @@ end
 --- Convert a "no" or a "false" was passed.
 -- @param s string (STRING)
 -- @return the boolean true if the string matches, nil otherwise (BOOLEAN)
-function cimicida.falsy (s)
+local falsy = function (s)
   if s == "no" or
      s == "NO" or
      s == "false" or
@@ -411,7 +410,7 @@ end
 -- @param return_code boolean setting to return exit code (BOOLEAN)
 -- @return the output as a string if the command exits with a non-zero status, nil otherwise (STRING or BOOLEAN)
 -- @return a status output from cimicida.exitstr as a string (STRING)
-function cimicida.popen (str, cwd, _ignore_error, _return_code)
+local popen = function (str, cwd, _ignore_error, _return_code)
   local result = {}
   local header = [[  set -ef
   export LC_ALL=C
@@ -452,7 +451,7 @@ end
 -- @param data string to feed to the pipe (STRING)
 -- @return the true if the command exits with a non-zero status, nil otherwise (BOOLEAN)
 -- @return a status output from cimicida.exitstr as a string (STRING)
-function cimicida.pwrite (str, data)
+local pwrite = function (str, data)
   local result = {}
   local write = io.write
   str = [[  set -ef
@@ -480,7 +479,7 @@ end
 -- @param str command to pass to system(3) (STRING)
 -- @return true if exit code is equal to zero, nil otherwise (BOOLEAN)
 -- @return a status output from cimicida.exitstr as a string (STRING)
-function cimicida.system (str)
+local system = function (str)
   local result = {}
   local set = [[  set -ef
   export LC_ALL=C
@@ -503,7 +502,7 @@ end
 -- @param str string to pass to system(3) (STRING)
 -- @return true if exit code is equal to zero, nil otherwise (BOOLEAN)
 -- @return a status output from cimicida.exitstr as a string (STRING)
-function cimicida.execute (str)
+local execute = function (str)
   local result = {}
   local set = [[  set -ef
   exec 0>&- 2>&- 1>/dev/null
@@ -520,7 +519,7 @@ end
 --- Run a shell pipe.
 -- @param ... a vararg containing the command pipe. The first argument should be popen or execute
 -- @return the output from cimicida.popen or cimicida.execute, nil if popen or execute was not passed (STRING or BOOLEAN)
-function cimicida.pipeline (...)
+local pipeline = function (...)
   local pipe = {}
   local cmds = {...}
   for n = 2, #cmds do
@@ -528,9 +527,9 @@ function cimicida.pipeline (...)
     if n ~= #cmds then pipe[#pipe + 1] = " | " end
   end
   if cmds[1] == "popen" then
-    return cimicida.popen(table.concat(pipe))
+    return popen(table.concat(pipe))
   elseif cmds[1] == "execute" then
-    return cimicida.execute(table.concat(pipe))
+    return execute(table.concat(pipe))
   else
     return
   end
@@ -541,7 +540,7 @@ end
 -- @param ... a vararg containing the arguments for the function (VARGS)
 -- @return the seconds elapsed as a number (NUMBER)
 -- @return the return values of the function (VALUE)
-function cimicida.time(f, ...)
+local time = function (f, ...)
   local t1 = os.time()
   local fn = {f(...)}
   return table.unpack(fn), os.difftime(os.time() , t1)
@@ -550,7 +549,7 @@ end
 --- Escape quotes ",'.
 -- @param str string to quote (STRING)
 -- @return quoted string (STRING)
-function cimicida.escapep (str)
+local escapep = function (str)
   str = string.gsub(str, [["]], [[\"]])
   str = string.gsub(str, [[']], [[\']])
   return str
@@ -561,7 +560,7 @@ end
 -- @param ident identification (STRING)
 -- @param msg string to log (STRING)
 -- @return a boolean value, true if not errors, nil otherwise (BOOLEAN)
-function cimicida.log (file, ident, msg)
+local log = function (file, ident, msg)
   local setvbuf = io.setvbuf
   local openlog = function (f)
     local fd = io.open(f, "ae+")
@@ -573,7 +572,7 @@ function cimicida.log (file, ident, msg)
   local log = "%s %s: %s\n"
   local timestamp = os.date("%a %b %d %T")
   fd:setvbuf("line")
-  local _, err = cimicida.outf(fd, log, timestamp, ident, msg)
+  local _, err = outf(fd, log, timestamp, ident, msg)
   io.flush(fd)
   io.close(fd)
   if err then
@@ -589,7 +588,7 @@ end
 -- @param pos position in the table (NUMBER)
 -- @param value value to insert (VALUE)
 -- @return the result of table.insert() (VALUE)
-function cimicida.insert_if (bool, list, pos, value)
+local insert_if = function (bool, list, pos, value)
   if bool then
     if core.type(value) == "table" then
       for n, i in core.ipairs(value) do
@@ -607,7 +606,7 @@ end
 -- @param bool value to evaluate (VALUE)
 -- @param value to return (VALUE)
 -- @return the value if bool is not nil or not false
-function cimicida.return_if (bool, value)
+local return_if = function (bool, value)
   if bool then
     return (value)
   end
@@ -617,10 +616,50 @@ end
 -- @param bool value to evaluate (VALUE)
 -- @param value to return (VALUE)
 -- @return the value if bool is nil or false
-function cimicida.return_if_not (bool, value)
+local return_if_not = function (bool, value)
   if bool == false or bool == nil then
     return value
   end
 end
 
-return cimicida
+return {
+  printf = printf,
+  outf = outf,
+  appendln = appendln,
+  errorf = errorf,
+  perror = perror,
+  warningf = warningf,
+  timehm = timehm,
+  dateymd = dateymd,
+  timestamp = timestamp,
+  hasv = hasv,
+  arr_to_rec = arr_to_rec,
+  ln_to_tbl = ln_to_tbl,
+  word_to_tbl = word_to_tbl,
+  str_to_tbl = str_to_tbl,
+  escape_pattern = escape_pattern,
+  filtertval = filtertval,
+  file_to_tbl = file_to_tbl,
+  tfind = tfind,
+  shallowcp = shallowcp,
+  splitp = splitp,
+  isfile = isfile,
+  fopen = fopen,
+  fwrite = fwrite,
+  getln = getln,
+  sub = sub,
+  exitstr = exitstr,
+  truthy = truthy,
+  falsy = falsy,
+  popen = popen,
+  pwrite = pwrite,
+  system = system,
+  execute = execute,
+  pipeline = pipeline,
+  time = time,
+  escapep = escapep,
+  log = log,
+  insert_if = insert_if,
+  return_if = return_if,
+  return_if_not = return_if_not
+}
