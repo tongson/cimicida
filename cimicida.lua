@@ -41,11 +41,11 @@ local errorf = function (str, ...)
 end
 
 
---- Call cimicida.errorf if the first argument is not nil or not false.
+--- Call cimicida.errorf if the first argument is false (i.e. nil or false).
 -- @param v value to evaluate (VALUE)
 -- @param str C-like string (STRING)
 -- @param ... Variable number of arguments to interpolate str (VARGS)
-local perror = function (v, str, ...)
+local assertf = function (v, str, ...)
   if v then
     return true
   else
@@ -618,7 +618,7 @@ return {
   outf = outf,
   appendln = appendln,
   errorf = errorf,
-  perror = perror,
+  assertf = assertf,
   warningf = warningf,
   timehm = timehm,
   dateymd = dateymd,
