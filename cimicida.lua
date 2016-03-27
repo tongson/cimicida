@@ -349,7 +349,6 @@ local sub = function (str, tbl)
 end
 
 --- Generate a string based on the values returned by os.execute or px.exec.
---- Usually used inside cimicida.mmsg
 -- @param proc process name (STRING)
 -- @param status exit status (STRING)
 -- @param code exit code (NUMBER)
