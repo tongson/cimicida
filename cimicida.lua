@@ -227,8 +227,7 @@ end
 -- @param tbl table to be copied (TABLE)
 -- @return the copy as a table (TABLE)
 local shallowcp = function (tbl)
-  local copy
-  copy = {}
+  local copy = {}
   for f, v in pairs(tbl) do
     if type(v) == "table" then
       copy[f] = {} -- first level only
