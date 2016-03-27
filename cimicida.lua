@@ -1,14 +1,7 @@
 --- Lua utilities
 -- @module cimicida
 local io, string, os, table = io, string, os, table
-local core = {
-  type         = type,
-  pcall        = pcall,
-  load         = load,
-  setmetatable = setmetatable,
-  pairs        = pairs,
-  ipairs       = ipairs
-}
+local type, pcall, load, setmetatable, pairs, ipairs = type, pcall, load, setmetatable, pairs, ipairs
 local ENV = {}
 _ENV = ENV
 
@@ -44,7 +37,7 @@ end
 -- @param ... Variable number of arguments to interpolate str (VARGS)
 local errorf = function (str, ...)
   outf(io.stderr, str, ...)
-  core.exit(1)
+  os.exit(1)
 end
 
 
@@ -91,7 +84,7 @@ end
 -- @param value value to look for in tbl (VALUE)
 -- @return a boolean value, true if v is found, nil otherwise (BOOLEAN)
 local hasv = function (tbl, value)
-  for _, tval in core.pairs(tbl) do
+  for _, tval in pairs(tbl) do
     tval = string.gsub(tval, '[%c]', '')
     if tval == value then return true end
   end
@@ -200,7 +193,7 @@ end
 -- @param file file to convert (STRING)
 -- @return a table (TABLE)
 local file_to_tbl = function (file)
-  local _, fd = core.pcall(io.open, file, "re")
+  local _, fd = pcall(io.open, file, "re")
   if fd then
     io.flush(fd)
     local tbl = {}
@@ -222,7 +215,7 @@ local tfind = function (tbl, str, patt)
   patt = patt or nil
   local ok, found
   for n = 1, #tbl do
-    ok, found = core.pcall(Lua.find, tbl[n], str, 1, patt)
+    ok, found = pcall(Lua.find, tbl[n], str, 1, patt)
     if ok and found then
       return n
     end
@@ -236,8 +229,8 @@ end
 local shallowcp = function (tbl)
   local copy
   copy = {}
-  for f, v in core.pairs(tbl) do
-    if core.type(v) == "table" then
+  for f, v in pairs(tbl) do
+    if type(v) == "table" then
       copy[f] = {} -- first level only
     else
       copy[f] = v
@@ -335,9 +328,9 @@ end
 -- @return processed string (STRING)
 local sub = function (str, tbl)
   local t, _ = {}, nil
-  _, str = core.pcall(string.gsub, str, "{{[%s]-([%g]+)[%s]-}}",
+  _, str = pcall(string.gsub, str, "{{[%s]-([%g]+)[%s]-}}",
     function (s)
-      t.type = core.type
+      t.type = type
       local code = [[
         V=%s
         if type(V) == "function" then
@@ -345,7 +338,7 @@ local sub = function (str, tbl)
         end
       ]]
       local lua = string.format(code, s)
-      local chunk, err = core.load(lua, lua, "t", core.setmetatable(t, {__index=tbl}))
+      local chunk, err = load(lua, lua, "t", setmetatable(t, {__index=tbl}))
       if chunk then
         chunk()
         return t.V
@@ -590,8 +583,8 @@ end
 -- @return the result of table.insert() (VALUE)
 local insert_if = function (bool, list, pos, value)
   if bool then
-    if core.type(value) == "table" then
-      for n, i in core.ipairs(value) do
+    if type(value) == "table" then
+      for n, i in ipairs(value) do
         local p = n - 1
         table.insert(list, pos + p, i)
       end
