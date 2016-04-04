@@ -55,7 +55,7 @@ end
 -- @param str Input string (STRING)
 -- @param a String to append to str (STRING)
 -- @return new string (STRING)
-local appendln = function (str, a)
+local append = function (str, a)
   return string.format("%s\n%s", str, a)
 end
 
@@ -615,10 +615,10 @@ end
 return {
   printf = printf,
   fprintf = fprintf,
-  appendln = appendln,
   errorf = errorf,
   assertf = assertf,
   warn = warn,
+  append = append,
   timehm = timehm,
   dateymd = dateymd,
   timestamp = timestamp,
