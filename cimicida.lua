@@ -16,7 +16,7 @@ end
 -- @param fd stream/descriptor
 -- @param str C-like string (STRING)
 -- @param ... Variable number of arguments to interpolate str (VARARGS)
-local outf = function (fd, str, ...)
+local fprintf = function (fd, str, ...)
   local o = io.output()
   io.output(fd)
   local ret, err = printf(str, ...)
@@ -28,7 +28,7 @@ end
 -- @param str C-like string (STRING)
 -- @param ... Variable number of arguments to interpolate str (VARGS)
 local warningf = function (str, ...)
-  outf(io.stderr, str, ...)
+  fprintf(io.stderr, str, ...)
 end
 
 --- Output formatted string to STDERR and return 1 as the exit status.
@@ -562,7 +562,7 @@ local log = function (file, ident, msg)
   local log = "%s %s: %s\n"
   local timestamp = os.date("%a %b %d %T")
   fd:setvbuf("line")
-  local _, err = outf(fd, log, timestamp, ident, msg)
+  local _, err = fprintf(fd, log, timestamp, ident, msg)
   io.flush(fd)
   io.close(fd)
   if err then
@@ -614,7 +614,7 @@ end
 
 return {
   printf = printf,
-  outf = outf,
+  fprintf = fprintf,
   appendln = appendln,
   errorf = errorf,
   assertf = assertf,
