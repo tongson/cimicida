@@ -27,7 +27,7 @@ end
 --- Output formatted string to STDERR.
 -- @param str C-like string (STRING)
 -- @param ... Variable number of arguments to interpolate str (VARGS)
-local warningf = function (str, ...)
+local warn = function (str, ...)
   fprintf(io.stderr, str, ...)
 end
 
@@ -35,7 +35,7 @@ end
 -- @param str C-like string (STRING)
 -- @param ... Variable number of arguments to interpolate str (VARGS)
 local errorf = function (str, ...)
-  warningf(str, ...)
+  warn(str, ...)
   os.exit(1)
 end
 
@@ -618,7 +618,7 @@ return {
   appendln = appendln,
   errorf = errorf,
   assertf = assertf,
-  warningf = warningf,
+  warn = warn,
   timehm = timehm,
   dateymd = dateymd,
   timestamp = timestamp,
