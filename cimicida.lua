@@ -6,6 +6,7 @@ local ENV = {}
 _ENV = ENV
 
 --- Output formatted string to the current output.
+-- @function printf
 -- @param str C-like string (STRING)
 -- @param ... Variable number of arguments to interpolate str (VARARGS)
 local printf = function (str, ...)
@@ -13,6 +14,7 @@ local printf = function (str, ...)
 end
 
 --- Output formatted string to a specified output.
+-- @function fprintf
 -- @param fd stream/descriptor
 -- @param str C-like string (STRING)
 -- @param ... Variable number of arguments to interpolate str (VARARGS)
@@ -25,24 +27,27 @@ local fprintf = function (fd, str, ...)
 end
 
 --- Output formatted string to STDERR.
+-- @function warn
 -- @param str C-like string (STRING)
--- @param ... Variable number of arguments to interpolate str (VARGS)
+-- @param ... Variable number of arguments to interpolate str (VARARGS)
 local warn = function (str, ...)
   fprintf(io.stderr, str, ...)
 end
 
 --- Output formatted string to STDERR and return 1 as the exit status.
+-- @function errorf
 -- @param str C-like string (STRING)
--- @param ... Variable number of arguments to interpolate str (VARGS)
+-- @param ... Variable number of arguments to interpolate str (VARARGS)
 local errorf = function (str, ...)
   warn(str, ...)
   os.exit(1)
 end
 
 --- Call cimicida.errorf if the first argument is false (i.e. nil or false).
--- @param v value to evaluate (VALUE)
+-- @function assertf
+-- @param v value to evaluate
 -- @param str C-like string (STRING)
--- @param ... Variable number of arguments to interpolate str (VARGS)
+-- @param ... Variable number of arguments to interpolate str (VARARGS)
 local assertf = function (v, str, ...)
   if v then
     return true
@@ -52,6 +57,7 @@ local assertf = function (v, str, ...)
 end
 
 -- Append a line break and string to an input string.
+-- @function append
 -- @param str Input string (STRING)
 -- @param a String to append to str (STRING)
 -- @return new string (STRING)
@@ -60,6 +66,7 @@ local append = function (str, a)
 end
 
 --- Time in the strftime(3) format %H:%M.
+-- @function timehm
 -- @return the time as a string (STRING)
 local timehm = function ()
   return os.date("%H:%M")
@@ -67,20 +74,23 @@ end
 
 
 --- Date in the strftime(3) format %Y-%m-%d.
+-- @function dateymd
 -- @return the date as a string (STRING)
 local dateymd = function ()
   return os.date("%Y-%m-%d")
 end
 
 --- Timestamp in the strftime(3) format %Y-%m-%d %H:%M:%S %Z%z.
+-- @function timestamp
 -- @return the timestamp as a string (STRING)
 local timestamp = function ()
   return os.date("%Y-%m-%d %H:%M:%S %Z%z")
 end
 
---- Check if a table has an specified value.
+--- Check if a table has an specified string.
+-- @function hasv
 -- @param tbl table to search (TABLE)
--- @param value value to look for in tbl (VALUE)
+-- @param string value to look for in tbl (STRING)
 -- @return a boolean value, true if v is found, nil otherwise (BOOLEAN)
 local hasv = function (tbl, value)
   for _, tval in pairs(tbl) do
@@ -91,7 +101,9 @@ end
 
 --- Convert an array to a record.
 -- Array values are converted into field names
--- @param tbl table to convert (TABLE)
+-- @function arr_to_rec
+-- @warning Does not check if input table is a sequence.
+-- @param tbl the properly sequenced table to convert (TABLE)
 -- @param def default value for each field in the record (VALUE)
 -- @return the converted table (TABLE)
 local arr_to_rec = function (tbl, def)
@@ -102,6 +114,7 @@ end
 
 --- Convert string to table.
 -- Each line is a table value
+-- @function ln_to_tbl
 -- @param str string to convert (STRING)
 -- @return the table (TABLE)
 local ln_to_tbl = function (str)
@@ -116,6 +129,7 @@ local ln_to_tbl = function (str)
 end
 
 --- Split alphanumeric matches of a string into table values.
+-- @function word_to_tbl
 -- @param str string to convert (STRING)
 -- @return the table (TABLE)
 local word_to_tbl = function (str)
@@ -127,6 +141,7 @@ local word_to_tbl = function (str)
 end
 
 --- Split non-space character matches of a string into table values.
+-- @function str_to_tbl
 -- @param str string to convert (STRING)
 -- @return the table (TABLE)
 local str_to_tbl = function (str)
@@ -139,6 +154,7 @@ end
 
 --- Escape a string for pattern usage
 -- From lua-nucleo.
+-- @function escape_pattern
 -- @param str string to escape (STRING)
 -- @return a new string (STRING)
 local escape_pattern = function (str)
@@ -163,6 +179,7 @@ end
 
 --- Filter table values.
 -- Adapted from <http://stackoverflow.com/questions/12394841/safely-remove-items-from-an-array-table-while-iterating>
+-- @function filtertval
 -- @param tbl table to operate on (TABLE)
 -- @param patt pattern to filter (STRING)
 -- @param plain set to true if doing plain matching (BOOLEAN)
@@ -189,6 +206,7 @@ end
 
 --- Convert file into a table.
 -- Each line is a table value
+-- @function file_to_tbl
 -- @param file file to convert (STRING)
 -- @return a table (TABLE)
 local file_to_tbl = function (file)
@@ -206,7 +224,8 @@ end
 
 --- Find a string in a table value.
 -- string is a plain string not a pattern
--- @param tbl table to traverse (TABLE)
+-- @function tfind
+-- @param tbl properly sequenced table to traverse (TABLE)
 -- @param str string to find (STRING)
 -- @param patt boolean setting for plain strings (BOOLEAN)
 -- @return the matching index if string is found, nil otherwise (NUMBER)
@@ -222,7 +241,8 @@ local tfind = function (tbl, str, patt)
 end
 
 --- Do a shallow copy of a table.
--- An nul table is created in the copy when table is encountered
+-- An empty table is created in the copy when a table is encountered
+-- @function shallowcp
 -- @param tbl table to be copied (TABLE)
 -- @return the copy as a table (TABLE)
 local shallowcp = function (tbl)
@@ -238,6 +258,7 @@ local shallowcp = function (tbl)
 end
 
 --- Split a path into its immediate location and file/directory components.
+-- @function splitp
 -- @param path path to split (STRING)
 -- @return location (STRING)
 -- @return file/directory (STRING)
@@ -257,6 +278,7 @@ end
 
 
 --- Check if a path is a file or not.
+-- @function isfile
 -- @param file path to the file (STRING)
 -- @return true if path is a file, nil otherwise (BOOLEAN)
 local isfile = function (file)
@@ -268,6 +290,7 @@ local isfile = function (file)
 end
 
 --- Read a file/path.
+-- @function fopen
 -- @param file path to the file (STRING)
 -- @return the contents of the file, nil if the file cannot be read or opened (STRING or NIL)
 local fopen = function (file)
@@ -281,6 +304,7 @@ local fopen = function (file)
 end
 
 --- Write a string to a file/path.
+-- @function fwrite
 -- @param path path to the file (STRING)
 -- @param str string to write (STRING)
 -- @param mode io.open mode (STRING)
@@ -303,6 +327,7 @@ end
 
 --- Get line.
 -- Given a line number return the line as a string.
+-- @function getln
 -- @param ln line number (NUMBER)
 -- @param file (STRING)
 -- @return the line (STRING)
@@ -321,6 +346,7 @@ end
 -- tbl = { "field" = "value" }
 -- str = [[ this is the {{ field }} ]]
 -- If passed with these arguments 'this is the {{ field }}' becomes 'this is the value'
+-- @function sub
 -- @param str string to interpolate (STRING)
 -- @param tbl table (record) to deduce values from (TABLE)
 -- @return processed string (STRING)
@@ -348,6 +374,7 @@ local sub = function (str, tbl)
 end
 
 --- Generate a string based on the values returned by os.execute or px.exec.
+-- @function exitstr
 -- @param proc process name (STRING)
 -- @param status exit status (STRING)
 -- @param code exit code (NUMBER)
@@ -362,6 +389,7 @@ local exitstr = function (proc, status, code)
 end
 
 --- Check if "yes" or a "true" was passed.
+-- @function truthy
 -- @param s string (STRING)
 -- @return the boolean true if the string matches, nil otherwise (BOOLEAN)
 local truthy = function (s)
@@ -375,6 +403,7 @@ local truthy = function (s)
 end
 
 --- Convert a "no" or a "false" was passed.
+-- @function falsy
 -- @param s string (STRING)
 -- @return the boolean true if the string matches, nil otherwise (BOOLEAN)
 local falsy = function (s)
@@ -394,6 +423,7 @@ end
 -- 3. STDIN is closed
 -- 4. Copy STDERR to STDOUT
 -- 5. Finally replace the shell with the command
+-- @function popen
 -- @param str command to popen(3) (STRING)
 -- @param cwd current working directory (STRING)
 -- @param ignore_error boolean setting to ignore errors (BOOLEAN)
@@ -437,6 +467,7 @@ end
 -- 3. STDOUT is closed
 -- 4. STDERR is closed
 -- 5. Finally replace the shell with the command
+-- @function pwrite
 -- @param str command to popen(3) (STRING)
 -- @param data string to feed to the pipe (STRING)
 -- @return the true if the command exits with a non-zero status, nil otherwise (BOOLEAN)
@@ -466,6 +497,7 @@ end
 -- 3. STDERR and STDIN are closed
 -- 4. STDOUT is piped to /dev/null
 -- 5. Finally replace the shell with the command
+-- @function system
 -- @param str command to pass to system(3) (STRING)
 -- @return true if exit code is equal to zero, nil otherwise (BOOLEAN)
 -- @return a status output from cimicida.exitstr as a string (STRING)
@@ -489,6 +521,7 @@ end
 --- Wrap os.execute also known as system(3).
 -- Similar to cimicida.system but it does not replace the shell.
 -- Suitable for scripts.
+-- @function execute
 -- @param str string to pass to system(3) (STRING)
 -- @return true if exit code is equal to zero, nil otherwise (BOOLEAN)
 -- @return a status output from cimicida.exitstr as a string (STRING)
@@ -507,6 +540,7 @@ local execute = function (str)
 end
 
 --- Run a shell pipe.
+-- @function pipeline
 -- @param ... a vararg containing the command pipe. The first argument should be popen or execute
 -- @return the output from cimicida.popen or cimicida.execute, nil if popen or execute was not passed (STRING or BOOLEAN)
 local pipeline = function (...)
@@ -526,8 +560,9 @@ local pipeline = function (...)
 end
 
 --- Time a function run.
+-- @function time
 -- @param f the function (FUNCTION)
--- @param ... a vararg containing the arguments for the function (VARGS)
+-- @param ... a vararg containing the arguments for the function (VARARGS)
 -- @return the seconds elapsed as a number (NUMBER)
 -- @return the return values of the function (VALUE)
 local time = function (f, ...)
@@ -537,6 +572,7 @@ local time = function (f, ...)
 end
 
 --- Escape quotes ",'.
+-- @function escapep
 -- @param str string to quote (STRING)
 -- @return quoted string (STRING)
 local escapep = function (str)
@@ -546,6 +582,7 @@ local escapep = function (str)
 end
 
 --- Log to a file.
+-- @function log
 -- @param file path name of the file (STRING)
 -- @param ident identification (STRING)
 -- @param msg string to log (STRING)
@@ -573,6 +610,7 @@ end
 
 --- Insert a value to a table position if the first argument is not nil or not false.
 -- Wraps table.insert().
+-- @function insert_if
 -- @param bool value to evaluate (VALUE)
 -- @param list table to insert to (TABLE)
 -- @param pos position in the table (NUMBER)
@@ -593,6 +631,7 @@ end
 
 --- Return the second argument if the first argument is not nil or not false.
 -- For value functions there should be no evaluation in the arguments.
+-- @function return_if
 -- @param bool value to evaluate (VALUE)
 -- @param value to return (VALUE)
 -- @return the value if bool is not nil or not false
@@ -603,6 +642,7 @@ local return_if = function (bool, value)
 end
 
 --- Return the second argument if the first argument is nil or false.
+-- @function return_if_not
 -- @param bool value to evaluate (VALUE)
 -- @param value to return (VALUE)
 -- @return the value if bool is nil or false
