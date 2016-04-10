@@ -242,10 +242,10 @@ end
 
 --- Do a shallow copy of a table.
 -- An empty table is created in the copy when a table is encountered
--- @function shallowcp
+-- @function shallow_cp
 -- @param tbl table to be copied (TABLE)
 -- @return the copy as a table (TABLE)
-local shallowcp = function (tbl)
+local shallow_cp = function (tbl)
   local copy = {}
   for f, v in next, tbl do
     if type(v) == "table" then
@@ -671,7 +671,7 @@ return {
   filtertval = filtertval,
   file_to_tbl = file_to_tbl,
   tfind = tfind,
-  shallowcp = shallowcp,
+  shallow_cp = shallow_cp,
   splitp = splitp,
   isfile = isfile,
   fopen = fopen,
