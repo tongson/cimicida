@@ -258,11 +258,11 @@ local shallow_cp = function (tbl)
 end
 
 --- Split a path into its immediate location and file/directory components.
--- @function splitp
+-- @function split_path
 -- @param path path to split (STRING)
 -- @return location (STRING)
 -- @return file/directory (STRING)
-local splitp = function (path)
+local split_path = function (path)
   local l = string.len(path)
   local c = string.sub(path, l, l)
   while l > 0 and c ~= "/" do
@@ -672,7 +672,7 @@ return {
   file_to_tbl = file_to_tbl,
   find_in_tbl = find_in_tbl,
   shallow_cp = shallow_cp,
-  splitp = splitp,
+  split_path = split_path,
   isfile = isfile,
   fopen = fopen,
   fwrite = fwrite,
