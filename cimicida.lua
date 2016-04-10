@@ -224,12 +224,12 @@ end
 
 --- Find a string in a table value.
 -- string is a plain string not a pattern
--- @function tfind
+-- @function find_in_tbl
 -- @param tbl properly sequenced table to traverse (TABLE)
 -- @param str string to find (STRING)
 -- @param patt boolean setting for plain strings (BOOLEAN)
 -- @return the matching index if string is found, nil otherwise (NUMBER)
-local tfind = function (tbl, str, patt)
+local find_in_tbl = function (tbl, str, patt)
   patt = patt or nil
   local ok, found
   for n = 1, #tbl do
@@ -670,7 +670,7 @@ return {
   escape_pattern = escape_pattern,
   filter_tbl_value = filter_tbl_value,
   file_to_tbl = file_to_tbl,
-  tfind = tfind,
+  find_in_tbl = find_in_tbl,
   shallow_cp = shallow_cp,
   splitp = splitp,
   isfile = isfile,
