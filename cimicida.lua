@@ -88,11 +88,11 @@ local timestamp = function ()
 end
 
 --- Check if a table has an specified string.
--- @function hasv
+-- @function find_string
 -- @param tbl table to search (TABLE)
 -- @param string value to look for in tbl (STRING)
 -- @return a boolean value, true if v is found, nil otherwise (BOOLEAN)
-local hasv = function (tbl, value)
+local find_string = function (tbl, value)
   for _, tval in next, tbl do
     tval = string.gsub(tval, '[%c]', '')
     if tval == value then return true end
@@ -662,7 +662,7 @@ return {
   timehm = timehm,
   dateymd = dateymd,
   timestamp = timestamp,
-  hasv = hasv,
+  find_string = find_string,
   arr_to_rec = arr_to_rec,
   ln_to_tbl = ln_to_tbl,
   word_to_tbl = word_to_tbl,
