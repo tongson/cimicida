@@ -374,12 +374,12 @@ local sub = function (str, tbl)
 end
 
 --- Generate a string based on the values returned by os.execute or px.exec.
--- @function exitstr
+-- @function exit_string
 -- @param proc process name (STRING)
 -- @param status exit status (STRING)
 -- @param code exit code (NUMBER)
 -- @return a formatted string (STRING)
-local exitstr = function (proc, status, code)
+local exit_string = function (proc, status, code)
   if status == "exit" or status == "exited" then
     return string.format("%s: Exited with code %s", proc, code)
   end
@@ -678,7 +678,7 @@ return {
   fwrite = fwrite,
   getln = getln,
   sub = sub,
-  exitstr = exitstr,
+  exit_string = exit_string,
   truthy = truthy,
   falsy = falsy,
   popen = popen,
