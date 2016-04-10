@@ -179,12 +179,12 @@ end
 
 --- Filter table values.
 -- Adapted from <http://stackoverflow.com/questions/12394841/safely-remove-items-from-an-array-table-while-iterating>
--- @function filtertval
+-- @function filter_tbl_value
 -- @param tbl table to operate on (TABLE)
 -- @param patt pattern to filter (STRING)
 -- @param plain set to true if doing plain matching (BOOLEAN)
 -- @return modified table (TABLE)
-local filtertval = function (tbl, patt, plain)
+local filter_tbl_value = function (tbl, patt, plain)
   plain = plain or nil
   local s, c = #tbl, 0
   for n = 1, s do
@@ -668,7 +668,7 @@ return {
   word_to_tbl = word_to_tbl,
   str_to_tbl = str_to_tbl,
   escape_pattern = escape_pattern,
-  filtertval = filtertval,
+  filter_tbl_value = filter_tbl_value,
   file_to_tbl = file_to_tbl,
   tfind = tfind,
   shallow_cp = shallow_cp,
