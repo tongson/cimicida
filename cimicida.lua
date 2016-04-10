@@ -572,10 +572,10 @@ local time = function (f, ...)
 end
 
 --- Escape quotes ",'.
--- @function escapep
+-- @function escape_quotes
 -- @param str string to quote (STRING)
 -- @return quoted string (STRING)
-local escapep = function (str)
+local escape_quotes = function (str)
   str = string.gsub(str, [["]], [[\"]])
   str = string.gsub(str, [[']], [[\']])
   return str
@@ -687,7 +687,7 @@ return {
   execute = execute,
   pipeline = pipeline,
   time = time,
-  escapep = escapep,
+  escape_quotes = escape_quotes,
   log = log,
   insert_if = insert_if,
   return_if = return_if,
