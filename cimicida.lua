@@ -1,7 +1,7 @@
 --- Lua utilities
 -- @module cimicida
 local io, string, os, table = io, string, os, table
-local type, pcall, load, setmetatable, pairs, ipairs = type, pcall, load, setmetatable, pairs, ipairs
+local type, pcall, load, setmetatable, ipairs, next = type, pcall, load, setmetatable, ipairs, next
 local ENV = {}
 _ENV = ENV
 
@@ -93,7 +93,7 @@ end
 -- @param string value to look for in tbl (STRING)
 -- @return a boolean value, true if v is found, nil otherwise (BOOLEAN)
 local hasv = function (tbl, value)
-  for _, tval in pairs(tbl) do
+  for _, tval in next, tbl do
     tval = string.gsub(tval, '[%c]', '')
     if tval == value then return true end
   end
@@ -247,7 +247,7 @@ end
 -- @return the copy as a table (TABLE)
 local shallowcp = function (tbl)
   local copy = {}
-  for f, v in pairs(tbl) do
+  for f, v in next, tbl do
     if type(v) == "table" then
       copy[f] = {} -- first level only
     else
