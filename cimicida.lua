@@ -563,8 +563,8 @@ end
 -- @function time
 -- @param f the function (FUNCTION)
 -- @param ... a vararg containing the arguments for the function (VARARGS)
--- @return the seconds elapsed as a number (NUMBER)
 -- @return the return values of the function (VALUE)
+-- @return the seconds elapsed as a number (NUMBER)
 local time = function (f, ...)
   local t1 = os.time()
   local fn = {f(...)}
