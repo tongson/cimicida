@@ -278,10 +278,10 @@ end
 
 
 --- Check if a path is a file or not.
--- @function isfile
+-- @function test_open
 -- @param file path to the file (STRING)
 -- @return true if path is a file, nil otherwise (BOOLEAN)
-local isfile = function (file)
+local test_open = function (file)
   local fd = io.open(file, "rb")
   if fd then
     io.close(fd)
@@ -582,12 +582,12 @@ local escape_quotes = function (str)
 end
 
 --- Log to a file.
--- @function log
+-- @function flog
 -- @param file path name of the file (STRING)
 -- @param ident identification (STRING)
 -- @param msg string to log (STRING)
 -- @return a boolean value, true if not errors, nil otherwise (BOOLEAN)
-local log = function (file, ident, msg)
+local flog = function (file, ident, msg)
   local setvbuf = io.setvbuf
   local openlog = function (f)
     local fd = io.open(f, "ae+")
@@ -652,6 +652,21 @@ local return_if_not = function (bool, value)
   end
 end
 
+--- A function for testing and condition and returning an error in case.
+-- Returns a function for testing a parameter and if the parameter is false or nil, logs to a file and output to stderr.
+-- @function try
+-- @param file file to log to (STRING)
+-- @param ident string to identify as when logging (STRING)
+-- @return a function
+local try = function (file, ident)
+  return function (condition, error_string)
+    if condition then return true end
+    error_string = string.format("%s\n", error_string)
+    flog(file, ident, error_string)
+    errorf(error_string)
+  end
+end
+
 return {
   printf = printf,
   fprintf = fprintf,
@@ -673,7 +688,7 @@ return {
   find_in_tbl = find_in_tbl,
   shallow_cp = shallow_cp,
   split_path = split_path,
-  isfile = isfile,
+  test_open = test_open,
   fopen = fopen,
   fwrite = fwrite,
   getln = getln,
@@ -688,8 +703,9 @@ return {
   pipeline = pipeline,
   time = time,
   escape_quotes = escape_quotes,
-  log = log,
+  flog = flog,
   insert_if = insert_if,
   return_if = return_if,
-  return_if_not = return_if_not
+  return_if_not = return_if_not,
+  try = try
 }
