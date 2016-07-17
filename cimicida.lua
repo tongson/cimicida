@@ -675,13 +675,17 @@ end
 --- Truncate a file.
 -- @function truncate
 -- @param file file to truncate (STRING)
+-- @return true if successful, or nil otherwise (BOOLEAN)
 local truncate = function (file)
-  local o = io.output()
   local fd = io.open(file, "w+")
-  io.output(fd)
-  io.write("")
-  io.close()
-  io.output(o)
+  if fd then
+    local o = io.output()
+    io.output(fd)
+    io.write("")
+    io.close()
+    io.output(o)
+    return true
+  end
 end
 
 --- Read file then assign to a string.
