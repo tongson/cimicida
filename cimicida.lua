@@ -691,16 +691,18 @@ end
 --- Read file then assign to a string.
 -- @function read_all
 -- @param file to read (STRING)
--- @return contents of file as a new string (STRING)
+-- @return contents of file as a new string, nil otherwise (STRING)
 local read_all = function (file)
   local str
-  local o = io.input()
   local fd = io.open(file)
-  io.input(fd)
-  str = io.read("*a")
-  io.close()
-  io.input(o)
-  return str
+  if fd then
+    local o = io.input()
+    io.input(fd)
+    str = io.read("*a")
+    io.close()
+    io.input(o)
+    return str
+  end
 end
 
 return {
