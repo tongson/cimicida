@@ -672,6 +672,33 @@ local try = function (file, ident)
   end
 end
 
+--- Truncate a file.
+-- @function truncate
+-- @param file file to truncate (STRING)
+local truncate = function (file)
+  local o = io.output()
+  local fd = io.open(file, "w+")
+  io.output(fd)
+  io.write("")
+  io.close()
+  io.output(o)
+end
+
+--- Read file then assign to a string.
+-- @function read_all
+-- @param file to read (STRING)
+-- @return contents of file as a new string (STRING)
+local read_all = function (file)
+  local str
+  local o = io.input()
+  local fd = io.open(file)
+  io.input(fd)
+  str = io.read("*a")
+  io.close()
+  io.input(o)
+  return str
+end
+
 return {
   printf = printf,
   fprintf = fprintf,
@@ -712,5 +739,7 @@ return {
   insert_if = insert_if,
   return_if = return_if,
   return_if_not = return_if_not,
-  try = try
+  try = try,
+  truncate = truncate,
+  read_all = read_all
 }
