@@ -316,7 +316,7 @@ end
 -- @return true if the write succeeded, nil and the error message otherwise (BOOLEAN)
 local fwrite = function (path, str, mode)
   local setvbuf, write = io.setvbuf, io.write
-  mode = mode or "we+"
+  mode = mode or "w+"
   local fd = io.open(path, mode)
   if fd then
     fd:setvbuf("no")
