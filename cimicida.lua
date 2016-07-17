@@ -31,7 +31,7 @@ end
 -- @param str C-like string (STRING)
 -- @param ... Variable number of arguments to interpolate str (VARARGS)
 local warn = function (str, ...)
-  fprintf(io.stderr, str, ...)
+  return fprintf(io.stderr, str, ...)
 end
 
 --- Output formatted string to STDERR and return 1 as the exit status.
