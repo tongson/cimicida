@@ -10,7 +10,7 @@ _ENV = ENV
 -- @param str C-like string (STRING)
 -- @param ... Variable number of arguments to interpolate str (VARARGS)
 local printf = function (str, ...)
-  io.write(string.format(str, ...))
+  return io.write(string.format(str, ...))
 end
 
 --- Output formatted string to a specified output.
