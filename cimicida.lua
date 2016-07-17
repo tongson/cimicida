@@ -210,14 +210,19 @@ end
 -- @param file file to convert (STRING)
 -- @return a table (TABLE)
 local file_to_tbl = function (file)
-  local _, fd = pcall(io.open, file, "re")
+  local ok ,fd =  pcall(io.open, file, "re")
+  if not ok then
+    fd = io.open(file, "r")
+  end
+  local default = io.input()
   if fd then
-    io.flush(fd)
+    io.input(fd)
     local tbl = {}
-    for ln in fd:lines("*L") do
+    for ln in io.lines() do
       tbl[#tbl + 1] = ln
     end
     io.close(fd)
+    io.input(default)
     return tbl
   end
 end
