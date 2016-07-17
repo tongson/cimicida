@@ -214,8 +214,8 @@ local file_to_tbl = function (file)
   if not ok then
     fd = io.open(file, "r")
   end
-  local default = io.input()
   if fd then
+    local default = io.input()
     io.input(fd)
     local tbl = {}
     for ln in io.lines() do
